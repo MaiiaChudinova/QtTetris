@@ -92,32 +92,37 @@ Widget::~Widget()
 void Widget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    //画游戏场景边框
+    //画游戏场景边框 Прорисовка границ (Нарисуйте границы игровой сцены)
     painter.setBrush(QBrush(Qt::white,Qt::SolidPattern));
     painter.drawRect(MARGIN,MARGIN,AREA_COL*BLOCK_SIZE,AREA_ROW*BLOCK_SIZE);
-    //画方块预告
+    //画方块预告 Рисование блока уведомления (??)
     painter.setBrush(QBrush(Qt::blue,Qt::SolidPattern));
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++)
             if(next_block[i][j]==1)
                 painter.drawRect(MARGIN*3+AREA_COL*BLOCK_SIZE+j*BLOCK_SIZE,MARGIN+i*BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
-    //绘制得分
+    //绘制得分 Прорисовка счета
     painter.setPen(Qt::black);
     painter.setFont(QFont("Arial",14));
     painter.drawText(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN*2+4*BLOCK_SIZE,BLOCK_SIZE*4,BLOCK_SIZE*4),Qt::AlignCenter,"score: "+QString::number(score));
 
 
     //绘制下落方块和稳定方块,注意方块边线的颜色是根据setPen来的，默认黑色
+    //Прорисовка блоков, границы блоков устанавливаются черными по
+    //умолчанию с помощью setPen
+    //(Нарисуйте падающий квадрат и стабильный квадрат, обратите внимание,
+    //что цвет края квадрата основан на setPen, по умолчанию черный)
+
     for(int i=0;i<AREA_ROW;i++)
         for(int j=0;j<AREA_COL;j++)
         {
-            //绘制活动方块
+            //绘制活动方块 Прорисовка активного блока
             if(game_area[i][j]==1)
             {
                 painter.setBrush(QBrush(Qt::red,Qt::SolidPattern));
                 painter.drawRect(j*BLOCK_SIZE+MARGIN,i*BLOCK_SIZE+MARGIN,BLOCK_SIZE,BLOCK_SIZE);
             }
-            //绘制稳定方块
+            //绘制稳定方块 Прорисовка стабильных блоков
             else if(game_area[i][j]==2)
             {
                 painter.setBrush(QBrush(Qt::green,Qt::SolidPattern));
@@ -128,10 +133,10 @@ void Widget::paintEvent(QPaintEvent *event)
 
 void Widget::timerEvent(QTimerEvent *event)
 {
-    //方块下落
+    //方块下落 Квадратная капля (?)
     if(event->timerId()==game_timer)
         BlockMove(DOWN);
-    //刷新画面
+    //刷新画面 Обновить экран
     if(event->timerId()==paint_timer)
         update();
 }
@@ -192,13 +197,13 @@ void Widget::CreateBlock(int block[4][4],int block_id)
 
 void Widget::GetBorder(int block[4][4],Border &border)
 {
-    //计算上下左右边界
+    //计算上下左右边界 Рассчитать сверху, снизу, слева (?)
     for(int i=0;i<4;i++)
         for(int j=0;j<4;j++)
             if(block[i][j]==1)
             {
                 border.dbound=i;
-                break; //直到计算到最后一行有1
+                break; //直到计算到最后一行有1 До последней строки расчета имеет 1 (?)
             }
     for(int i=3;i>=0;i--)
         for(int j=0;j<4;j++)
@@ -245,15 +250,17 @@ void Widget::InitGame()
 
 void Widget::ResetBlock()
 {
-    //产生当前方块
+    //产生当前方块 Создать текущую партию (?)
     block_cpy(cur_block,next_block);
     GetBorder(cur_block,cur_border);
 
-    //产生下一个方块
+    //产生下一个方块 Генерация следующего квадрата
     int block_id=rand()%7;
     CreateBlock(next_block,block_id);
 
     //设置初始方块坐标,以方块左上角为锚点
+    //Установите начальные квадратные координаты,
+    //с верхним левым углом квадрата в качестве точки привязки
     block_point start_point;
     start_point.pos_x=AREA_COL/2-2;
     start_point.pos_y=0;
@@ -264,7 +271,7 @@ void Widget::StartGame()
 {
     game_timer=startTimer(speed_ms); //开启游戏timer
     paint_timer=startTimer(refresh_ms); //开启界面刷新timer
-    //产生初始下一个方块
+    //产生初始下一个方块 Создайте начальный следующий квадрат
     int block_id=rand()%7;
     CreateBlock(next_block,block_id);
     ResetBlock(); //产生方块
@@ -295,22 +302,22 @@ void Widget::ConvertStable(int x,int y)
     for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
         for(int j=cur_border.lbound;j<=cur_border.rbound;j++)
             if(cur_block[i][j]==1)
-                game_area[y+i][x+j]=2; //x和y别搞反
+                game_area[y+i][x+j]=2; //x和y别搞反 х и у не реагируют (?)
 }
 
 bool Widget::IsCollide(int x,int y,Direction dir)
 {
-    //用拷贝的临时方块做判断
+    //用拷贝的临时方块做判断 Используйте копию временного квадрата, чтобы выносить суждения :D
     int temp_block[4][4];
     block_cpy(temp_block,cur_block);
     Border temp_border;
     GetBorder(temp_block,temp_border);
-    //先尝试按照某方向走一格
+    //先尝试按照某方向走一格 Попробуйте сначала следовать указаниям xD
     switch(dir)
     {
     case UP:
         BlockRotate(temp_block);
-        GetBorder(temp_block,temp_border); //旋转后要重新计算边界
+        GetBorder(temp_block,temp_border); //旋转后要重新计算边界 Пересчитать границу после поворота
         break;
     case DOWN:
         y+=1;
@@ -337,17 +344,17 @@ void Widget::BlockMove(Direction dir)
     case UP:
         if(IsCollide(block_pos.pos_x,block_pos.pos_y,UP))
             break;
-        //逆时针旋转90度
+        //逆时针旋转90度 Повернуть на 90 градусов против часовой стрелки
         BlockRotate(cur_block);
-        //防止旋转后bug,i和j从0到4重新设置方块
+        //防止旋转后bug,i和j从0到4重新设置方块 Предотвращение вращения после вращения, i и j сбрасывают блок с 0 до 4 (?)
         for(int i=0;i<4;i++)
             for(int j=0;j<4;j++)
                 game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
-        //重新计算边界
+        //重新计算边界 Пересчитать границу
         GetBorder(cur_block,cur_border);
         break;
     case DOWN:
-        //方块到达边界则不再移动
+        //方块到达边界则不再移动 Квадрат не двигается, когда достигает границы
         if(block_pos.pos_y+cur_border.dbound==AREA_ROW-1)
         {
             ConvertStable(block_pos.pos_x,block_pos.pos_y);
@@ -355,33 +362,40 @@ void Widget::BlockMove(Direction dir)
             break;
         }
         //碰撞检测，只计算上下左右边界，先尝试走一格，如果碰撞则稳定方块后跳出
+        //Обнаружение столкновений, рассчитайте только верхнюю и нижнюю левую и правую границы,
+        //попробуйте сначала пройти одну сетку, если она столкнется, затем стабилизируйте квадрат и выпрыгните (???)
         if(IsCollide(block_pos.pos_x,block_pos.pos_y,DOWN))
         {
-            //只有最终不能下落才转成稳定方块
+            //只有最终不能下落才转成稳定方块 Только когда оно не может упасть, оно превращается в устойчивый квадрат
             ConvertStable(block_pos.pos_x,block_pos.pos_y);
             ResetBlock();
             break;
         }
         //恢复方块上场景,为了清除移动过程中的方块残留
+        //Восстановите сцену на площади, чтобы очистить квадрат от остатков во время движения
         for(int j=cur_border.lbound;j<=cur_border.rbound;j++)
             game_area[block_pos.pos_y][block_pos.pos_x+j]=0;
-        //没有碰撞则下落一格
+        //没有碰撞则下落一格 Бросить без столкновения
         block_pos.pos_y+=1;
         //方块下降一格，拷贝到场景,注意左右边界
+        //Квадрат отбрасывает один пробел, копирует на сцену, обращает внимание на левую и правую границы
         for(int i=0;i<4;i++) //必须是0到4而不是边界索引，考虑到旋转后边界重新计算
+                             //Должно быть от 0 до 4 вместо граничного индекса, принимая во внимание пересчет границы после вращения
             for(int j=cur_border.lbound;j<=cur_border.rbound;j++)
                 if(block_pos.pos_y+i<=AREA_ROW-1&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //注意场景数组不越界,而且不会擦出稳定的方块
+                                                                                                      //Обратите внимание, что массив сцен не пересекает границу и не стирает стабильные квадраты.
                     game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
         break;
     case LEFT:
-        //到左边界或者碰撞不再往左
+        //到左边界或者碰撞不再往左 На левую границу или столкновение больше не налево
         if(block_pos.pos_x+cur_border.lbound==0||IsCollide(block_pos.pos_x,block_pos.pos_y,LEFT))
             break;
         //恢复方块右场景,为了清除移动过程中的方块残留
+        //Восстановите квадратную правую сцену, чтобы очистить квадратный остаток во время движения
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
             game_area[block_pos.pos_y+i][block_pos.pos_x+3]=0;
         block_pos.pos_x-=1;
-        //方块左移一格，拷贝到场景
+        //方块左移一格，拷贝到场景 Переместите квадрат влево и скопируйте его на сцену.
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
             for(int j=0;j<4;j++)
                 if(block_pos.pos_x+j>=0&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //注意场景数组不越界
@@ -391,28 +405,33 @@ void Widget::BlockMove(Direction dir)
         if(block_pos.pos_x+cur_border.rbound==AREA_COL-1||IsCollide(block_pos.pos_x,block_pos.pos_y,RIGHT))
             break;
         //恢复方块左场景,为了清除移动过程中的方块残留
+        //Восстановите левую сцену квадрата, чтобы очистить квадрат от остатков во время движения
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
             game_area[block_pos.pos_y+i][block_pos.pos_x]=0;
         block_pos.pos_x+=1;
-        //方块右移一格，拷贝到场景
+        //方块右移一格，拷贝到场景 Переместите квадрат вправо и скопируйте его на сцену.
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
             for(int j=0;j<4;j++)
                 if(block_pos.pos_x+j<=AREA_COL-1&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //注意场景数组不越界
+                                                                                                      //Обратите внимание, что массив сцены не пересекает границу
                     game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
         break;
-    case SPACE: //一次到底
-        //一格一格下移，直到不能下移
+    case SPACE: //一次到底 Однажды в конце...
+        //一格一格下移，直到不能下移 Переместите одну сетку вниз, пока вы не сможете двигаться вниз
         while(block_pos.pos_y+cur_border.dbound<AREA_ROW-1&&!IsCollide(block_pos.pos_x,block_pos.pos_y,DOWN))
         {
             //恢复方块上场景,为了清除移动过程中的方块残留
+            //Восстановите сцену на площади, чтобы очистить квадрат от остатков во время движения
             for(int j=cur_border.lbound;j<=cur_border.rbound;j++)
                 game_area[block_pos.pos_y][block_pos.pos_x+j]=0;
-            //没有碰撞则下落一格
+            //没有碰撞则下落一格 Бросить без столкновения
             block_pos.pos_y+=1;
             //方块下降一格，拷贝到场景,注意左右边界
-            for(int i=0;i<4;i++) //必须是0到4
+            //Квадрат отбрасывает один пробел, копирует на сцену, обращает внимание на левую и правую границы
+            for(int i=0;i<4;i++) //必须是0到4 Должно быть от 0 до 4
                 for(int j=cur_border.lbound;j<=cur_border.rbound;j++)
                     if(block_pos.pos_y+i<=AREA_ROW-1&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //注意场景数组不越界,而且不会擦出稳定的方块
+                                                                                                          //Обратите внимание, что массив сцен не пересекает границу и не стирает стабильные квадраты.
                         game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
         }
         ConvertStable(block_pos.pos_x,block_pos.pos_y);
@@ -422,8 +441,9 @@ void Widget::BlockMove(Direction dir)
         break;
     }
     //处理消行，整个场景上面的行依次下移
+    //Обработка исчезает, линии над всей сценой перемещаются по очереди
     int i=AREA_ROW-1;
-    int line_count=0; //记消行数
+    int line_count=0; //记消行数 Количество строк
     while(i>=1)
     {
         bool is_line_full=true;
@@ -439,12 +459,12 @@ void Widget::BlockMove(Direction dir)
             for(int k=i;k>=1;k--)
                 for(int j=0;j<AREA_COL;j++)
                     game_area[k][j]=game_area[k-1][j];
-            line_count++;//每次增加消行的行数
+            line_count++;//每次增加消行的行数 Увеличьте количество строк, которые потребляются каждый раз
         }
     }
     score+=line_count*10; //得分
     //判断游戏是否结束
     for(int j=0;j<AREA_COL;j++)
-        if(game_area[0][j]==2) //最顶端也有稳定方块
+        if(game_area[0][j]==2) //最顶端也有稳定方块 Есть также стабильные блоки наверху.
             GameOver();
 }
