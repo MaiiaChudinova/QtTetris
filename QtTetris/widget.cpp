@@ -343,7 +343,7 @@ void Widget::BlockMove(Direction dir)
             break;
         // Повернуть на 90 градусов против часовой стрелки
         BlockRotate(cur_block);
-        // Предотвращение вращения после вращения, i и j сбрасывают блок с 0 до 4 (?)
+
         for(int i=0;i<4;i++)
             for(int j=0;j<4;j++)
                 game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
@@ -411,8 +411,8 @@ void Widget::BlockMove(Direction dir)
                                                                                                       //Обратите внимание, что массив сцены не пересекает границу
                     game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
         break;
-    case SPACE: // Однажды в конце...
-        // Переместите одну сетку вниз, пока вы не сможете двигаться вниз
+    case SPACE:
+
         while(block_pos.pos_y+cur_border.dbound<AREA_ROW-1&&!IsCollide(block_pos.pos_x,block_pos.pos_y,DOWN))
         {
             //Восстановите сцену на площади, чтобы очистить квадрат от остатков во время движения
@@ -421,7 +421,7 @@ void Widget::BlockMove(Direction dir)
             // Бросить без столкновения
             block_pos.pos_y+=1;
             //Квадрат отбрасывает один пробел, копирует на сцену, обращает внимание на левую и правую границы
-            for(int i=0;i<4;i++) // Должно быть от 0 до 4
+            for(int i=0;i<4;i++)
                 for(int j=cur_border.lbound;j<=cur_border.rbound;j++)
                     if(block_pos.pos_y+i<=AREA_ROW-1&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //Обратите внимание, что массив сцен не пересекает границу и не стирает стабильные квадраты.
                         game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
@@ -434,14 +434,13 @@ void Widget::BlockMove(Direction dir)
     }
 
 
-    // Обработка исчезает, линии над всей сценой перемещаются по очереди
     int i=AREA_ROW-1;
-    int line_count=0; // Количество строк
+    int line_count=0;
     while(i>=1)
     {
         bool is_line_full=true;
         for(int j=0;j<AREA_COL;j++)
-            if(game_area[i][j]==0)
+            if(game_area[i][j]==0 || game_area[i][j]==1)
             {
                 is_line_full=false;
                 i--;
@@ -453,45 +452,11 @@ void Widget::BlockMove(Direction dir)
                 for(int j=0;j<AREA_COL;j++)
                     game_area[k][j]=game_area[k-1][j];
 
-            // возможно проблема находится здесь
-            // стирание блоков должно происходить не так - фигура должна сначала упасть, а уже потом убрать строки которые
-            // должны быть стерты
-
-            line_count++;// Увеличьте количество строк, которые потребляются каждый раз
+            line_count++;
         }
     }
 
-    /*
-    int i = 0;
-    int line_count=0;
-    while (i < AREA_ROW)
-    {
-        bool is_line_full = true;
-
-        for(int j=0;j<AREA_COL;j++)
-            if(game_area[i][j]==0)
-            {
-                is_line_full=false;
-                i++;
-                break;
-            }
-
-        if(is_line_full)
-        {
-            for(int k=i;k>=1;k--)
-                for(int j=0;j<AREA_COL;j++)
-                    game_area[k][j]=game_area[k-1][j];
-
-            // возможно проблема находится здесь
-            // стирание блоков должно происходить не так - фигура должна сначала упасть, а уже потом убрать строки которые
-            // должны быть стерты
-
-            line_count++;// Увеличьте количество строк, которые потребляются каждый раз
-        }
-    }*/
-
     score+=line_count*10;
-    //QMessageBox::information(this,"score added","score added");
 
 
     for(int j=0;j<AREA_COL;j++)
