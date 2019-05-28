@@ -79,6 +79,9 @@ private:
     int paint_timer; //渲染刷新计时器
     int speed_ms; //下落时间间隔
     int refresh_ms; //刷新时间间隔
+    int rounds;
+    int score_coeff;
+    int speed_decrement;
 
 };
 

@@ -235,6 +235,9 @@ void Widget::InitGame()
 
     speed_ms=800;
     refresh_ms=30;
+    rounds = 0;
+    score_coeff = 10;
+    speed_decrement = 50;
 
     //初始化随机数种子
     srand(time(0));
@@ -456,8 +459,19 @@ void Widget::BlockMove(Direction dir)
         }
     }
 
-    score+=line_count*10;
+    score+=line_count*score_coeff;
 
+    ++rounds;
+
+    if (rounds % 50 == 0)
+    {
+        score_coeff += 5;
+        if (speed_ms >= 400)
+        {
+            speed_ms -= speed_decrement;
+            game_timer=startTimer(speed_ms);
+        }
+    }
 
     for(int j=0;j<AREA_COL;j++)
         if(game_area[0][j]==2) // Есть также стабильные блоки наверху.
