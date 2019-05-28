@@ -26,7 +26,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="gameNameLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -39,7 +39,9 @@
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">qproperty-alignment: AlignCenter;</string>
+      <string notr="true">QLabel{
+	qproperty-alignment: AlignCenter;
+}</string>
      </property>
      <property name="text">
       <string>Tetris</string>

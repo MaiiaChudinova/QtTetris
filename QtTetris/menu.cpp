@@ -8,7 +8,6 @@ Menu::Menu(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->startGameButton, SIGNAL(clicked()), this, SLOT(slotOnStartGameButton()));
-
 }
 
 Menu::~Menu()
