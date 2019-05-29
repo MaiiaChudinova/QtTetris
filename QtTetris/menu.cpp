@@ -8,6 +8,7 @@ Menu::Menu(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->startGameButton, SIGNAL(clicked()), this, SLOT(slotOnStartGameButton()));
+    connect(ui->settingsButton, SIGNAL(clicked()), this, SLOT(slotOnSettingsButton()));
 }
 
 Menu::~Menu()
@@ -20,4 +21,10 @@ void Menu::slotOnStartGameButton()
     this->hide();
     widget = new Widget();
     widget->show();
+}
+
+void Menu::slotOnSettingsButton()
+{
+    settings = new Settings();
+    settings->show();
 }

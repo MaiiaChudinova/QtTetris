@@ -14,10 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         menu.cpp \
+        settings.cpp \
         widget.cpp
 
 HEADERS  += widget.h \
-    menu.h
+    menu.h \
+    settings.h
 
 FORMS    += widget.ui \
-    menu.ui
+    menu.ui \
+    settings.ui

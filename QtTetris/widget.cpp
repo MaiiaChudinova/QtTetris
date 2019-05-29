@@ -106,7 +106,6 @@ void Widget::paintEvent(QPaintEvent *event)
     painter.setFont(QFont("Arial",14));
     painter.drawText(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN*2+4*BLOCK_SIZE,BLOCK_SIZE*4,BLOCK_SIZE*4),Qt::AlignCenter,"score: "+QString::number(score));
 
-
     //Прорисовка блоков, границы блоков устанавливаются черными по
     //умолчанию с помощью setPen
     //(Нарисуйте падающий квадрат и стабильный квадрат, обратите внимание,
@@ -244,6 +243,9 @@ void Widget::InitGame()
 
     //分数清0
     score=0;
+
+    //ui->pauseButton->setGeometry(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN+8*BLOCK_SIZE,ui->pauseButton->width(),ui->pauseButton->height()));
+
 
     //开始游戏
     StartGame();

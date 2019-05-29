@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "widget.h"
+#include "settings.h"
 
 namespace Ui {
 class Menu;
@@ -19,10 +20,12 @@ public:
 
 private slots:
     void slotOnStartGameButton();
+    void slotOnSettingsButton();
 
 private:
     Ui::Menu *ui;
     Widget* widget;
+    Settings* settings;
 };
 
 #endif // MENU_H
