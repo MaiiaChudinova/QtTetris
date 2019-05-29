@@ -396,12 +396,13 @@ void Widget::BlockMove(Direction dir)
             break;
         // Очистить правую часть, которую больше не занимает подвинутый влево блок
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
-            game_area[block_pos.pos_y+i][block_pos.pos_x+3]=0;
+            if (game_area[block_pos.pos_y+i][block_pos.pos_x+3] != 2)
+                game_area[block_pos.pos_y+i][block_pos.pos_x+3]=0;
         block_pos.pos_x-=1;
         // Переместите квадрат влево и скопируйте его на сцену.
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
             for(int j=0;j<4;j++)
-                if(block_pos.pos_x+j>=0&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //注意场景数组不越界
+                if(block_pos.pos_x+j>=0&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2)
                     game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
         break;
     case RIGHT:
@@ -410,13 +411,13 @@ void Widget::BlockMove(Direction dir)
 
         // Очистить левую часть, которую больше не занимает подвинутый вправо блок
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
-            game_area[block_pos.pos_y+i][block_pos.pos_x]=0;
+            if (game_area[block_pos.pos_y+i][block_pos.pos_x] != 2)
+                game_area[block_pos.pos_y+i][block_pos.pos_x]=0;
         block_pos.pos_x+=1;
         // Переместите квадрат вправо и скопируйте его на сцену.
         for(int i=cur_border.ubound;i<=cur_border.dbound;i++)
             for(int j=0;j<4;j++)
-                if(block_pos.pos_x+j<=AREA_COL-1&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2) //注意场景数组不越界
-                                                                                                      //Обратите внимание, что массив сцены не пересекает границу
+                if(block_pos.pos_x+j<=AREA_COL-1&&game_area[block_pos.pos_y+i][block_pos.pos_x+j]!=2)
                     game_area[block_pos.pos_y+i][block_pos.pos_x+j]=cur_block[i][j];
         break;
     case SPACE:
