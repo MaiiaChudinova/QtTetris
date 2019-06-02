@@ -303,6 +303,9 @@ void Widget::GameOver()
 
     QMessageBox::information(this,"failed","game over");
 
+
+    this->close();
+
 }
 
 void Widget::BlockRotate(int block[4][4])

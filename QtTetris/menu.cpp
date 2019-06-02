@@ -14,6 +14,7 @@ Menu::Menu(QWidget *parent) :
 
     connect(ui->startGameButton, SIGNAL(clicked()), this, SLOT(slotOnStartGameButton()));
     connect(ui->settingsButton, SIGNAL(clicked()), this, SLOT(slotOnSettingsButton()));
+    connect(ui->showLeaderboardButton, SIGNAL(clicked()), this, SLOT(slotOnShowLeaderboardButton()));
 }
 
 Menu::~Menu()
@@ -36,29 +37,12 @@ void Menu::slotOnSettingsButton()
 
 void Menu::slotOnShowLeaderboardButton()
 {
-    QString filename = "Leaderboard.txt";
-    QFile scores(filename);
 
-    scores.open(QIODevice::ReadOnly | QIODevice::Text);
 
-    vector<QString> vscores;
+    leaderboard = new Leaderboard();
 
-    while(!scores.atEnd())
-    {
-        QString str = scores.readLine();
-        vscores.push_back(str);
-    }
 
-    QString temp;
-      int n = vscores.size();
-      for (int i = 0; i < n; ++i)
-        for (int j = n - 1; j > i; --j)
-          if (vscores[j - 1] > vscores[j])
-          {
-            temp = vscores[j - 1];
-            vscores[j - 1] = vscores[j];
-            vscores[j] = temp;
-          }
 
-    scores.close();
+    leaderboard->show();
+
 }

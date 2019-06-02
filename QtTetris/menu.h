@@ -5,6 +5,7 @@
 
 #include "widget.h"
 #include "settings.h"
+#include "leaderboard.h"
 
 namespace Ui {
 class Menu;
@@ -27,6 +28,7 @@ private:
     Ui::Menu *ui;
     Widget* widget;
     Settings* settings;
+    Leaderboard* leaderboard;
 };
 
 #endif // MENU_H

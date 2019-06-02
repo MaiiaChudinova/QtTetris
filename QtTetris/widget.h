@@ -64,6 +64,8 @@ public:
     virtual void paintEvent(QPaintEvent *event); //场景刷新
     virtual void timerEvent(QTimerEvent *event); //定时器事件
     virtual void keyPressEvent(QKeyEvent *event); //键盘响应
+    int score_coeff;
+    int speed_decrement;
 
 private:
     Ui::Widget *ui;
@@ -81,8 +83,6 @@ private:
     int speed_ms; //下落时间间隔
     int refresh_ms; //刷新时间间隔
     int rounds;
-    int score_coeff;
-    int speed_decrement;
     bool paused = false;
 
 };

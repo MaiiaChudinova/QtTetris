@@ -13,14 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+        leaderboard.cpp \
         menu.cpp \
         settings.cpp \
         widget.cpp
 
 HEADERS  += widget.h \
+    leaderboard.h \
     menu.h \
     settings.h
 
 FORMS    += widget.ui \
+    leaderboard.ui \
     menu.ui \
     settings.ui
