@@ -21,6 +21,7 @@ public:
 private slots:
     void slotOnStartGameButton();
     void slotOnSettingsButton();
+    void slotOnShowLeaderboardButton();
 
 private:
     Ui::Menu *ui;

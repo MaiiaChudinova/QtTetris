@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QKeyEvent>
+#include <QFile>
 #include "widget.h"
 #include "ui_widget.h"
 
@@ -158,6 +159,9 @@ void Widget::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Space:
         BlockMove(SPACE);
         break;
+    case Qt::Key_Escape:
+        Pause();
+        break;
     default:
         break;
     }
@@ -244,7 +248,8 @@ void Widget::InitGame()
     //分数清0
     score=0;
 
-    //ui->pauseButton->setGeometry(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN+8*BLOCK_SIZE,ui->pauseButton->width(),ui->pauseButton->height()));
+    //ui->BackToMenuButton->setGeometry(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN+8*BLOCK_SIZE,ui->BackToMenuButton->width(),ui->BackToMenuButton->height()));
+    //ui->PauseButton->setGeometry(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN+10*BLOCK_SIZE,ui->PauseButton->width(),ui->PauseButton->height()));
 
 
     //开始游戏
@@ -284,6 +289,18 @@ void Widget::GameOver()
     //游戏结束停止计时器
     killTimer(game_timer);
     killTimer(paint_timer);
+    QString filename = "Leaderboard.txt";
+    QFile record(filename);
+
+    record.open(QIODevice::Append | QIODevice::Text);
+
+    QTextStream stream(&record);
+    QString s = QString::number(score);
+    stream << s << endl;
+
+    record.close();
+
+
     QMessageBox::information(this,"failed","game over");
 
 }
@@ -341,8 +358,20 @@ bool Widget::IsCollide(int x,int y,Direction dir)
     return false;
 }
 
+void Widget::Pause()
+{
+    if (paused) paused = false;
+    else
+    {
+        paused = true;
+        QMessageBox::information(this,"pause","game is paused");
+    }
+}
+
 void Widget::BlockMove(Direction dir)
 {
+
+    if (paused) return;
     switch (dir) {
     case UP:
         if(IsCollide(block_pos.pos_x,block_pos.pos_y,UP))

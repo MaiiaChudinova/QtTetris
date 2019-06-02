@@ -55,6 +55,7 @@ public:
     void GetBorder(int block[4][4],Border &border); //计算边界
     void ConvertStable(int x,int y); //转换为稳定方块
     bool IsCollide(int x,int y,Direction dir); //判断是否会碰撞
+    void Pause();
 
 public:
     explicit Widget(QWidget *parent = 0);
@@ -82,6 +83,7 @@ private:
     int rounds;
     int score_coeff;
     int speed_decrement;
+    bool paused = false;
 
 };
 
