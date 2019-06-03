@@ -14,9 +14,14 @@ class Settings : public QWidget
 public:
     explicit Settings(QWidget *parent = nullptr);
     ~Settings();
+    int difficulty();
 
 private:
     Ui::Settings *ui;
+
+private slots:
+    void slotOnOkayButton();
+
 };
 
 #endif // SETTINGS_H

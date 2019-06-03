@@ -60,12 +60,12 @@ public:
 public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
+    explicit Widget(int diff);
 
     virtual void paintEvent(QPaintEvent *event); //场景刷新
     virtual void timerEvent(QTimerEvent *event); //定时器事件
     virtual void keyPressEvent(QKeyEvent *event); //键盘响应
-    int score_coeff;
-    int speed_decrement;
+    int diff = 3;
 
 private:
     Ui::Widget *ui;
@@ -80,8 +80,11 @@ private:
     int score;  //游戏分数
     int game_timer; //方块下落计时器
     int paint_timer; //渲染刷新计时器
-    int speed_ms; //下落时间间隔
     int refresh_ms; //刷新时间间隔
+    int speed_ms; //下落时间间隔
+    int score_coeff;
+    int speed_decrement;
+    int score_coef_addition;
     int rounds;
     bool paused = false;
 

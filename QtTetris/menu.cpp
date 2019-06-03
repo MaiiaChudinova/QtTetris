@@ -25,7 +25,10 @@ Menu::~Menu()
 void Menu::slotOnStartGameButton()
 {
     this->hide();
-    widget = new Widget();
+    widget = new Widget(settings->difficulty());
+
+    //widget->diff = ;
+
     widget->show();
 }
 
@@ -37,12 +40,6 @@ void Menu::slotOnSettingsButton()
 
 void Menu::slotOnShowLeaderboardButton()
 {
-
-
     leaderboard = new Leaderboard();
-
-
-
     leaderboard->show();
-
 }

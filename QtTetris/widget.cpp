@@ -74,8 +74,7 @@ inline void block_cpy(int dblock[4][4],int sblock[4][4])
             dblock[i][j]=sblock[i][j];
 }
 
-Widget::Widget(QWidget *parent) :
-    QWidget(parent),
+Widget::Widget(QWidget *parent) : QWidget(parent),
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
@@ -88,6 +87,14 @@ Widget::Widget(QWidget *parent) :
 Widget::~Widget()
 {
     delete ui;
+}
+
+Widget::Widget(int diff)
+{
+    this->diff = diff;
+    ui->setupUi(this);
+    resize(AREA_COL*BLOCK_SIZE+MARGIN*4+4*BLOCK_SIZE,AREA_ROW*BLOCK_SIZE+MARGIN*2);
+    InitGame();
 }
 
 void Widget::paintEvent(QPaintEvent *event)
@@ -236,21 +243,47 @@ void Widget::InitGame()
         for(int j=0;j<AREA_COL;j++)
             game_area[i][j]=0;
 
-    speed_ms=800;
+
+    switch(diff)
+    {
+
+    case 1:
+        speed_ms = 1000;
+        score_coef_addition = 0;
+        score_coeff = 10;
+        speed_decrement = 0;
+        //game_timer=startTimer(speed_ms);
+        break;
+    case 2:
+        speed_ms = 800;
+        score_coef_addition = 5;
+        speed_decrement = 25;
+        score_coeff = 10;
+        break;
+    case 3:
+        speed_ms=800;
+        score_coeff = 10;
+        speed_decrement = 50;
+        score_coef_addition = 10;
+        //game_timer=startTimer(speed_ms);
+        break;
+    case 4:
+        speed_ms = 600;
+        score_coeff = 15;
+        speed_decrement = 35;
+        score_coef_addition = 20;
+        break;
+    }
+
+
     refresh_ms=30;
     rounds = 0;
-    score_coeff = 10;
-    speed_decrement = 50;
 
     //初始化随机数种子
     srand(time(0));
 
     //分数清0
     score=0;
-
-    //ui->BackToMenuButton->setGeometry(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN+8*BLOCK_SIZE,ui->BackToMenuButton->width(),ui->BackToMenuButton->height()));
-    //ui->PauseButton->setGeometry(QRect(MARGIN*3+AREA_COL*BLOCK_SIZE,MARGIN+10*BLOCK_SIZE,ui->PauseButton->width(),ui->PauseButton->height()));
-
 
     //开始游戏
     StartGame();
@@ -269,7 +302,10 @@ void Widget::ResetBlock()
     //Установите начальные квадратные координаты,
     //с верхним левым углом квадрата в качестве точки привязки
     block_point start_point;
-    start_point.pos_x=AREA_COL/2-2;
+    if (diff == 4)
+        start_point.pos_x=rand()%(AREA_COL-6) + 1;
+    else
+        start_point.pos_x=AREA_COL/2-2;
     start_point.pos_y=0;
     block_pos=start_point;
 }
@@ -503,7 +539,7 @@ void Widget::BlockMove(Direction dir)
 
     if (rounds % 50 == 0)
     {
-        score_coeff += 5;
+        score_coeff += score_coef_addition;
         if (speed_ms >= 400)
         {
             speed_ms -= speed_decrement;

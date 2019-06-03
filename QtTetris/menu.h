@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::Menu *ui;
     Widget* widget;
-    Settings* settings;
+    Settings* settings = new Settings();
     Leaderboard* leaderboard;
 };
 
