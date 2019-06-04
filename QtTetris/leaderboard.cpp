@@ -1,6 +1,7 @@
 #include "leaderboard.h"
 #include "ui_leaderboard.h"
 #include <QFile>
+#include <QMessageBox>
 #include <vector>
 #include <set>
 
@@ -13,6 +14,11 @@ Leaderboard::Leaderboard(QWidget *parent) :
     QString filename = "Leaderboard.txt";
     QFile scores(filename);
 
+    if (!scores.exists())
+    {
+        QMessageBox::information(this,"info","Leaderboard is empty.");
+        return;
+    }
     scores.open(QIODevice::ReadOnly | QIODevice::Text);
 
     std::vector<QString> vscores;
@@ -39,22 +45,6 @@ Leaderboard::Leaderboard(QWidget *parent) :
     for (int i = n - 1; i > 0; --i)
         ui->scores->addItem(vscores[i]);
 
-    /*std::set<QString> s;
-    for (int i = n - 1; i >= 1; --i)
-        s.insert(vscores[i]);
-
-    std::set<QString>::iterator it = s.begin();
-
-
-    //int x = *it;
-
-    for (int i = 0; i < s.size(); ++i)
-    {
-        std::advance(it, i);
-        vscores[i] = *it;
-    }
-    for (int i = s.size() - 1; i >= 0; --i)
-        ui->scores->addItem(vscores[i]);*/
 }
 
 Leaderboard::~Leaderboard()
