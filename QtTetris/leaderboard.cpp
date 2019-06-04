@@ -44,6 +44,8 @@ Leaderboard::Leaderboard(QWidget *parent) :
 
     for (int i = n - 1; i > 0; --i)
         ui->scores->addItem(vscores[i]);
+    if (ui->scores->count() == 0)
+        ui->scores->addItem("Leaderboard is empty.");
 
 }
 
